@@ -26,9 +26,10 @@ game.displayMenu = function(){
 
 }
 
+//TO-DO finish removing hardcoded from html
 game.displayEnemies = function(){
-	$('#main').remove('h1');
-	$('#characters').remove('img')
+	$('#main').attr('visible', 'hidden');
+	$('#game-stage').attr('hidden', 'visible')
 	$('#characters').html(`<h2 class='text-center'>${game.instructions2}<h2>`);
 	var charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite);
 	var charFig = charImage.replace('%playername%', game.player.name);
@@ -42,9 +43,9 @@ game.displayEnemies = function(){
 }
 
 //display on load
-// game.displayMenu();
+game.displayMenu();
 // call on second click or investigate target... do remaining ex form class
-game.displayEnemies()
+// game.displayEnemies()
 //game.displayFight();
 // game.gameOver();
 
