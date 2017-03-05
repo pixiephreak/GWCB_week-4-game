@@ -12,32 +12,41 @@
 <body>
 	<div class=container>
 		<div class = "row">
+			<div id="test">
+			</div>
+			<!-- First Menu: Choose Player-->
 			<div id="main" class="col-xs-12 text-center">
 				<div id = "characters">
 				</div>
 			</div>
-
-			<div class ="hidden" id="game-stage">
+			<!-- Second Menu: Choose enemy -->
+			<div id="game-stage" class ="col-xs-12 hidden">
 				<div class= "row">
 					<div id = "player" class= "col-xs-6 text-left">
 						<h3 >You</h3>
 					</div>
 					<div class= "col-xs-6 text-right" id="enemy-choices">
-						<h3  >Enemies</h3>
+						<h3>Enemies</h3>
 					</div>
 				</div>
 			</div>
+			<!-- Third Scree: Battle -->
+			<div id="fight-stage" class="col-xs-12 hidden">
+				<div id="fight-player" alt="player" class = "col-xs-4 pull-left">
+				</div>
+				<div class="row col-xs-4 text-center">
+					<button type="button" class="btn btn-primary">Fight
+					</button>
+				</div>
+				<div id="fight-enemy" alt="enemy" class = "col-xs-4 pull-right">
+				</div>
+			</div>
+			<!-- Fourth Screen: Win/Lose -->
+			<div id="game-complete" class="col-xs-12 hidden">
 
-			<div class= "row">
-				<div class = "col-xs-12 hidden" id="fight-stage">
-					<div id="player" alt="player" class = "col-xs-4 pull-left">
-					</div>
-					<div class="row col-xs-4 text-center">
-						<button type="button" class="btn btn-primary">Fight</button>
-					</div>
-					<div id="opponent" alt="opponent" class = "col-xs-4 pull-right">
-					</div>
-
+				<div class="row col-xs-4 text-center">
+					<button type="button" class="btn btn-primary">Play Again
+					</button>
 				</div>
 
 			</div>
