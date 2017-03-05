@@ -78,24 +78,27 @@ game.displayComplete = function(){
 
 $(document).ready(function(){
 
-	$("p").on("click", function(){
-    alert("The paragraph was clicked.");
-});
-
     $('.character-sprite').on('click',function(event){
-        imgSrc = $(this).attr("src");
-        name = $(this).attr("alt")
+        var imgSrc = $(this).attr("src");
+        var name = $(this).attr("alt")
         game.player = new Character(imgSrc, name, 0, 0);
+        var index = game.sprites.indexOf(imgSrc);
+        game.sprites.splice(0,1);
         game.displayEnemies();
     });
 
     $('enemy-choice').on('click', function(event){
         imgSrc = $(this).attr("src");
         name = $(this).attr("alt")
-        game.player = new Character(imgSrc, name, 0, 0);
+        game.enemy = new Character(imgSrc, name, 0, 0);
+        console.log('enemy created')
         game.displayEnemies();
     });
 
+    $('#fight-button').on('click', function(event){
+    	game.player.health++;
+    	console.log(game.player.health);
+    })
 
 });
 
