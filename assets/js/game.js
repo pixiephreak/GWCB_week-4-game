@@ -39,6 +39,7 @@ game.displayEnemies = function(){
 	$('#main').toggleClass( "hidden" );
 	$('#game-stage').toggleClass("hidden");
 	$('#game-stage').prepend(`<h2 class='text-center'>${game.instructions2}<h2>`);
+	var charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite);
 	var charFig = charImage.replace('%playername%', game.player.name);
 		$('#player').append(charFig);
 	game.sprites.forEach(function(sprite){
@@ -76,18 +77,28 @@ game.displayComplete = function(){
 }
 
 $(document).ready(function(){
-    $(".character-sprite").click(function(event){
+
+	$("p").on("click", function(){
+    alert("The paragraph was clicked.");
+});
+
+    $('.character-sprite').on('click',function(event){
         imgSrc = $(this).attr("src");
         name = $(this).attr("alt")
         game.player = new Character(imgSrc, name, 0, 0);
         game.displayEnemies();
     });
 
-     $("#enemy-choices").click(function(event){
-        game.displayBattle();
-        console.log("click")
+    $('enemy-choice').on('click', function(event){
+        imgSrc = $(this).attr("src");
+        name = $(this).attr("alt")
+        game.player = new Character(imgSrc, name, 0, 0);
+        game.displayEnemies();
     });
+
+
 });
+
 
 
 game.displayMenu();
