@@ -12,15 +12,16 @@ var game = {
 	//on click, player will be added to game using the class constructor and parameters will be passed down from click function.
 	//Also, the img/data for the sprite should be spliced from array, leaving only enemies
 	//for now I'll jsut use this placeholder,
-	player: {sprite:'https://placehold.it/200/200',name:'thisone',health:'0',attackPotency:'0'}
+	player: {sprite:'https://placehold.it/200/200',name:'thisone',health:'0',attack:'0'},
+	enemy: {sprite:'https://placehold.it/200/200',name:'thisone',health:'0',attack:'0'}
 }
 
 game.displayMenu = function(){
-	$('#main').append(`<h1> ${game.title} </h1>`,`<h3>${game.introduction}</h3>`);
-	var HTMLsprite = "<img alt='character' class= 'col-md-3 col-xs-6 img img-thumbnail img-responsive' src=%data% />";
-	$('#characters').append(`<h2 class='text-center'>${game.instructions1}<h2>`)
+	$('#main').prepend(`<h1> ${game.title} </h1>`,`<h3>${game.introduction}</h3>`);
+	$('#main').prepend(`<h2 class='text-center'>${game.instructions1}<h2>`)
 	game.sprites.forEach(function(sprite){
 		var charImage = HTMLsprite.replace('%data%', sprite);
+		console.log(charImage);
 		$('#characters').append(charImage);
 	})
 
@@ -28,24 +29,54 @@ game.displayMenu = function(){
 
 //TO-DO finish removing hardcoded from html
 game.displayEnemies = function(){
-	$('#main').attr('visible', 'hidden');
-	$('#game-stage').attr('hidden', 'visible')
-	$('#characters').html(`<h2 class='text-center'>${game.instructions2}<h2>`);
+
+	$('#game-stage').prepend(`<h2 class='text-center'>${game.instructions2}<h2>`);
 	var charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite);
 	var charFig = charImage.replace('%playername%', game.player.name);
-		$('#characters').append(charFig);
+		$('#player').append(charFig);
 	game.sprites.forEach(function(sprite){
 		var charImage = HTMLsprite.replace('%data%', sprite);
-		$('#characters').append(charImage);
+		$('#enemy-choices').append(charImage);
 	})
+
 
 
 }
 
+game.displayBattle = function(){
+	$('#fight-stage').prepend(`<h2 class='text-center'>${game.instructions3}<h2>`);
+	var playerImage = HTMLplayerfig.replace('%imgdata%', game.player.sprite);
+	var playerName = playerImage.replace('%playername%', game.player.name);
+	var playerHealth = playerName.replace('%health%', game.player.health);
+	var playerAttack = playerHealth.replace('%attack%',game.player.attack)
+		$('#player').append(playerAttack);
+	var enemyImage = HTMLplayerfig.replace('%imgdata%', game.enemy.sprite);
+	var enemyName = enemyImage.replace('%playername%', game.enemy.name);
+	var enemyHealth = enemyName.replace('%health%', game.enemy.health);
+	var enemyAttack = enemyHealth.replace('%attack%',game.enemy.attack)
+		$('#opponent').append(enemyAttack);
+	var playerResult = `<h3 id="player-result">${game.player.health}</h3>`
+	var enemyResult =  `<h3 id="defender-result">${game.enemy.health}</h3>`
+
+
+
+}
+
+console.log($('.character-sprite'))
+
+$( document ).ready(function() {
+
+$('.character-sprite').click(function() {
+	console.log('click');
+  $('#main').toggleClass( "hidden" );
+  $('#game-stage').toggleClass("hidden")
+});
+});
+
 //display on load
 game.displayMenu();
 // call on second click or investigate target... do remaining ex form class
-// game.displayEnemies()
+game.displayEnemies()
 //game.displayFight();
 // game.gameOver();
 
