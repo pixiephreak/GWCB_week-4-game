@@ -54,6 +54,7 @@ game.displayEnemies = function(){
 game.displayBattle = function(){
 	$('#game-stage').toggleClass("hidden");
 	$('#fight-stage').toggleClass("hidden");
+	//TO-DO: find a more consice wat to replace string data
 	$('#fight-stage').prepend(`<h2 class='text-center'>${game.instructions3}<h2>`);
 	var playerImage = HTMLplayerfig.replace('%imgdata%', game.player.sprite);
 	var playerName = playerImage.replace('%playername%', game.player.name);
@@ -87,15 +88,16 @@ $(document).ready(function(){
         game.displayEnemies();
     });
 
-    $('enemy-choice').on('click', function(event){
+     $('#enemy-choices').on('click', '.enemy-choice', function(event){
         imgSrc = $(this).attr("src");
         name = $(this).attr("alt")
         game.enemy = new Character(imgSrc, name, 0, 0);
         console.log('enemy created')
-        game.displayEnemies();
+        game.displayBattle();
     });
 
     $('#fight-button').on('click', function(event){
+    	console.log('click')
     	// Whenever the player clicks attack, their character damages the defender.
     	// The opponent will lose HP (health points).
     	// These points are displayed at the bottom of the defender's picture.
