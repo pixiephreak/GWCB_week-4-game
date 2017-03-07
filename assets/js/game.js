@@ -17,6 +17,7 @@ var game = {
 				 {sprite:'https://placehold.it/200/200', name:'thisthree'},
 				 {sprite:'https://placehold.it/200/200', name:'thisfour'}
 				 ],
+	enemies: [],
 	//add a result to the game object upon win. for now, use this placeholder.
 	result: 'You Won!'
 }
@@ -32,16 +33,12 @@ game.displayMenu = function(){
 	$('#main').prepend(`<h1> ${game.title} </h1>`,`<h3>${game.introduction}</h3>`);
 	$('#main').append(`<h2 class='text-center'>${game.instructions1}<h2>`);
 
-	for (let i=0; i<this.characters.length; i++){
-		var sprite = this.characters[i].sprite;
-		var charImageAlt = HTMLspriteAlt.replace('%data%', this.characters[i].name)
-		var charImage = charImageAlt.replace('%data%', sprite);
+
+	game.characters.forEach(function(character){
+		var charImageAlt = HTMLspriteAlt.replace('%data%', character.name)
+		var charImage = charImageAlt.replace('%data%', character.sprite);
 		$('#characters').append(charImage);
-	}
-	// game.characters.forEach(function(sprite){
-	// 	var charImage = HTMLsprite.replace('%data%', sprite);
-	// 	$('#characters').append(charImage);
-	// })
+	})
 	// for(let i=0; i<game.characterData.length; i++){
 	// 	game.characters.push(new Character(game.characterData[i].sprite,game.characterData[i].name, game.characterData[i].health, game.characterData[i].attack));
 	// 	}
@@ -56,9 +53,12 @@ game.displayEnemies = function(){
 	$('#game-stage').prepend(`<h2 class='text-center'>${game.instructions2}<h2>`);
 	var charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite);
 	var charFig = charImage.replace('%playername%', game.player.name);
-		$('#player').append(charFig);
-	game.characters.forEach(function(sprite){
-		var enemyImage = HTMLenemysprite.replace('%data%', game.enemy.sprite);
+	$('#player').append(charFig);
+	game.characters.forEach(function(character){
+		var enemy = new Character(character.sprite, character.name, random(200,40), random(40,5));
+		game.enemies.push(enemy);
+		var charImageAlt = HTMLenemyspriteAlt.replace('%data%', character.name)
+		var enemyImage = charImageAlt.replace('%data%', character.sprite);
 		$('#enemy-choices').append(enemyImage);
 	})
 
@@ -112,22 +112,18 @@ $(document).ready(function(){
         Player.prototype.constructor = Player;
         var counterAttack = attack;
         game.player = new Player(counterAttack);
-        console.log(game.characters, game.players)
         function findPlayer(value) {
             return value.name === name;
         }
         var index = game.characters.indexOf(game.characters.find(findPlayer));
         game.characters.splice(index,1);
-        console.log(game.characters);
-        game.displayEnemies;
+        game.displayEnemies();
 
     });
 
      $('#enemy-choices').on('click', '.enemy-choice', function(event){
         imgSrc = $(this).attr("src");
         name = $(this).attr("alt")
-        game.enemy = new Character(imgSrc, name, HEALTHPOINTS, ATTACK);
-        console.log('enemy created')
         game.displayBattle();
     });
 
