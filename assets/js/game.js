@@ -80,7 +80,9 @@ game.displayComplete = function(){
 }
 
 game.restart = function(){
+	$('#fight-stage').toggleClass('hidden');
  	$('#game-complete').toggleClass('hidden');
+ 	$('#main').toggleClass( 'hidden' );
  	//TO-DO: use some sort of boolean switch to toggle classes instead of hard-coding
 }
 
@@ -128,6 +130,17 @@ $(document).ready(function(){
     	game.enemy.health = game.enemy.health - game.player.attack;
     	game.player.attack = game.player.attack + game.player.counterAttack;
     	console.log(`now player:${game.player.health} now enemy${game.enemy.health}`)
+    	if(game.player.health <= 0){
+    		game.restart();
+    	}else if(game.enemy.health <=0){
+    		console.log(game.enemies);
+    		for (var i = 0; i < game.enemies.length; i++) {
+           		if (game.enemies[i].name == name)
+           			var index = game.enemies.indexOf(game.enemies[i].name);
+                	game.enemies.splice(index,1);
+                	game.restart();
+        }
+    	}
     	// $('figcaption').htlm(`Name: ${game.player.name} Health: ${game.player.health}`)
     	// Whenever the player clicks attack, their character damages the defender.
     	// The opponent will lose HP (health points).
