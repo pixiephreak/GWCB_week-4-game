@@ -17,7 +17,7 @@ var game = {
 				 {sprite:'https://placehold.it/200/200', name:'thisthree'},
 				 {sprite:'https://placehold.it/200/200', name:'thisfour'}
 				 ],
-	enemies: [],
+	newCharacters: [],
 	//add a result to the game object upon win. for now, use this placeholder.
 	result: 'You Won!'
 }
@@ -32,13 +32,13 @@ Character = function(sprite, name, health, attack){
 game.displayMenu = function(){
 	$('#main').prepend(`<h1> ${game.title} </h1>`,`<h3>${game.introduction}</h3>`);
 	$('#main').append(`<h2 class='text-center'>${game.instructions1}<h2>`);
-
-
 	game.characters.forEach(function(character){
-		var charImageAlt = HTMLspriteAlt.replace('%data%', character.name)
-		var charImage = charImageAlt.replace('%data%', character.sprite);
+		var newCharacter = new Character(character.sprite, character.name, random(200,40), random(40,5));
+		game.newCharacters.push(newCharacter)
+		var charImage = HTMLspritefig.replace('%imgdata%', newCharacter.sprite).replace('%altdata%', newCharacter.name).replace('%playername%', newCharacter.name).replace('%playerhealth%', newCharacter.health);
 		$('#characters').append(charImage);
 	})
+	console.log(game.newCharacters);
 	// for(let i=0; i<game.characterData.length; i++){
 	// 	game.characters.push(new Character(game.characterData[i].sprite,game.characterData[i].name, game.characterData[i].health, game.characterData[i].attack));
 	// 	}
@@ -98,26 +98,30 @@ game.restart = function(){
 
 $(document).ready(function(){
 
-    $('.character-sprite').on('click',function(event){
-        var sprite = $(this).attr("src");
-        var name = $(this).attr("alt");
-        var health = random(200, 40);
-        var attack = random(40,5);
+    $('.figure-img').on('click',function(event){
+    	var name = $(this).attr("alt")
+        var match;
+        for (var i = 0; i < game.newCharacters.length; i++) {
+           if (game.newCharacters[i].name == name)
+                match = game.newCharacters[i];
+        }
+
         // create Player subclass
         var Player = function(counterAttack){
             'use strict';
-            Character.call(this, sprite, name, health, attack );
+            Character.call(this, match.sprite, match,name, match.health, match.attack );
         };
         Player.prototype= Object.create(Character.prototype);
         Player.prototype.constructor = Player;
-        var counterAttack = attack;
+        var counterAttack = match.attack;
         game.player = new Player(counterAttack);
-        function findPlayer(value) {
-            return value.name === name;
-        }
-        var index = game.characters.indexOf(game.characters.find(findPlayer));
-        game.characters.splice(index,1);
-        game.displayEnemies();
+        console.log(match, game.player);
+        // splice player from newCharacters
+        console.log(game.newCharacters);
+       	var index = game.newCharacters.indexOf(match);
+       	game.newCharacters.splice(index,1);
+       	console.log(game.newCharacters);
+        // game.displayEnemies();
 
     });
 
