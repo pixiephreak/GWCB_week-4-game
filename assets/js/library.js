@@ -1,4 +1,5 @@
-var HTMLspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded" alt="%altdata%"><figcaption class="figure-caption">Name: %playername% Health: %playerhealth%</figcaption></figure>'
+var HTMLspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded character-sprite" alt="%altdata%"><figcaption class="figure-caption">Name: %playername% Health: %playerhealth%</figcaption></figure>'
+var HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><figcaption class="figure-caption">Name: %playername% Health: %playerhealth%</figcaption></figure>'
 
 
 
