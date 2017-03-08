@@ -12,6 +12,7 @@ var game = {
 	instructions1:'Choose any player to begin',
 	instructions2: 'Choose an opponent',
 	instructions3: 'Click to attack your opponent',
+	instructions4: 'Choose another enemy',
 	characters: [{sprite:'https://placehold.it/200/200', name:'thisone'},
 				 {sprite:'https://placehold.it/200/200', name:'thistwo'},
 				 {sprite:'https://placehold.it/200/200', name:'thisthree'},
@@ -34,7 +35,7 @@ game.displayMenu = function(){
 	$('#main').prepend(`<h1> ${game.title} </h1>`,`<h3>${game.introduction}</h3>`);
 	$('#main').append(`<h2 class='text-center'>${game.instructions1}<h2>`);
 	game.characters.forEach(function(character){
-		var newCharacter = new Character(character.sprite, character.name, random(100,100), random(20,5));
+		var newCharacter = new Character(character.sprite, character.name, random(100,100), random(10,5));
 		game.newCharacters.push(newCharacter)
 		player.charImage = HTMLspritefig.replace('%imgdata%', newCharacter.sprite).replace('%altdata%', newCharacter.name).replace('%playername%', newCharacter.name).replace('%playerhealth%', newCharacter.health).replace('%playerattack%', newCharacter.attack);
 		$('#characters').append(player.charImage);
@@ -46,14 +47,14 @@ game.displayMenu = function(){
 game.displayEnemies = function(){
 	$('#main').toggleClass( 'hidden' );
 	$('#game-stage').toggleClass('hidden');
-	$('#game-stage').prepend(`<h2 class='text-center'>${game.instructions2}<h2>`);
+	$('#game-stage').prepend(`<h2 id='#instructions2'class='text-center'>${game.instructions2}<h2>`);
 	console.log(game.player);
 	player.charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite).replace('%altdata%', game.player.name).replace('%playername%', game.player.name).replace('%playerhealth%', game.player.health).replace('%playerattack%', game.player.attack);
 	$('#player').append(player.charImage);
 	game.newCharacters.forEach(function(character){
 		var enemy = new Character(character.sprite, character.name, character.health, character.attack);
 		game.enemies.push(enemy);
-		enemyImage = HTMLenemyspritefig.replace('%imgdata%', character.sprite).replace('%altdata%', character.name).replace('%playername%', character.name).replace('%playerhealth%', character.health).replace('%playerattack%', character.attack);
+		var enemyImage = HTMLenemyspritefig.replace('%imgdata%', character.sprite).replace('%altdata%', character.name).replace('%playername%', character.name).replace('%playerhealth%', character.health).replace('%playerattack%', character.attack);
 		$('#enemy-choices').append(enemyImage);
 	})
 
@@ -64,13 +65,41 @@ game.displayEnemies = function(){
 game.displayBattle = function(){
 	$('#game-stage').toggleClass('hidden');
 	$('#fight-stage').toggleClass('hidden');
-	var HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><figcaption class="figure-caption">Name: %playername% Health: %playerhealth% Attack Potency: %playerattack%</figcaption></figure>'
+    $('#fight-button').toggleClass('hidden');
+	HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><figcaption id="enemy-caption"class="figure-caption">Name: %playername% Health: %playerhealth% Attack Potency: %playerattack%</figcaption></figure>'
 	game.enemy.charImage = HTMLenemyspritefig.replace('%imgdata%', game.enemy.sprite).replace('%altdata%', game.enemy.name).replace('%playername%', game.enemy.name).replace('%playerhealth%', game.enemy.health).replace('%playerattack%', game.enemy.attack);
-	$('#fight-stage').prepend(`<h2 class='text-center'>${game.instructions3}<h2>`);
+	$('#fight-stage').prepend(`<h2 id="instructions3" class='text-center'>${game.instructions3}<h2>`);
 	$('#fight-player').append(player.charImage);
 	$('#fight-enemy').append(game.enemy.charImage);
 	var playerResult = `<h3 id="player-result">${game.player.health}</h3>`
+    // $('#character-caption').html(`Name:${game.player.name} Health:${game.player.health}`);
+    // $('#enemy-caption').html(`Name:${game.enemy.name} Health:${game.enemy.health}`);
 	// var enemyResult =  `<h3 id="defender-result">${this.enemy.health}</h3>`
+}
+
+//TO-DO finish removing hardcoded from html
+
+
+game.displayNext = function(){
+    $('#fight-stage').prepend(`<h2 id='instructions4' class='text-center'>${game.instructions4}<h2>`);
+    $('#instructions3').remove();
+	//remove current enemy from model
+	for (var i = 0; i < game.enemies.length; i++) {
+           		if (game.enemies[i].name == name)
+           			var index = game.enemies.indexOf(game.enemies[i].name);
+            }
+    game.enemies.splice(index,1);
+    console.log(game.enemies);
+    // TO-DO: remove current enemy from DOM
+    $('#fight-enemy').empty();
+    $('#fight-button').toggleClass('hidden');
+    //repopulate DOM with remaining enemy choices
+    game.enemies.forEach(function(character){
+        console.log(character)
+    	enemyImage = HTMLenemyspritefig.replace('%imgdata%', character.sprite).replace('%altdata%', character.name).replace('%playername%', character.name).replace('%playerhealth%', character.health).replace('%playerattack%', character.attack);
+    	console.log("appending" + enemyImage);
+        $('#fight-enemy').append(enemyImage);
+    })
 }
 
 game.displayComplete = function(){
@@ -80,9 +109,11 @@ game.displayComplete = function(){
 }
 
 game.restart = function(){
-	$('#fight-stage').toggleClass('hidden');
  	$('#game-complete').toggleClass('hidden');
  	$('#main').toggleClass( 'hidden' );
+ 	game.newCharacters = [];
+ 	game.enemies = [];
+ 	game.displayMenu();
  	//TO-DO: use some sort of boolean switch to toggle classes instead of hard-coding
 }
 
@@ -122,6 +153,17 @@ $(document).ready(function(){
         game.displayBattle();
     });
 
+      $('#fight-enemy').on('click', 'img', function(event){
+        var name = $(this).attr("alt");
+        for (var i = 0; i < game.enemies.length; i++) {
+           if (game.enemies[i].name == name)
+                game.enemy = game.enemies[i];
+        }
+
+        game.displayBattle();
+    });
+
+
     $('#fight-button').on('click', function(event){
 
     	console.log(`player attack:${game.player.attack}, playercoutner:${game.player.counterAttack}`)
@@ -131,25 +173,11 @@ $(document).ready(function(){
     	game.player.attack = game.player.attack + game.player.counterAttack;
     	console.log(`now player:${game.player.health} now enemy${game.enemy.health}`)
     	if(game.player.health <= 0){
-    		game.restart();
+    		game.result = "You lose";
+    		game.displayComplete();
     	}else if(game.enemy.health <=0){
-    		console.log(game.enemies);
-    		for (var i = 0; i < game.enemies.length; i++) {
-           		if (game.enemies[i].name == name)
-           			var index = game.enemies.indexOf(game.enemies[i].name);
-                	game.enemies.splice(index,1);
-                	game.restart();
+    		game.displayNext();
         }
-    	}
-    	// $('figcaption').htlm(`Name: ${game.player.name} Health: ${game.player.health}`)
-    	// Whenever the player clicks attack, their character damages the defender.
-    	// The opponent will lose HP (health points).
-    	// These points are displayed at the bottom of the defender's picture.
-    	// The opponent character will instantly counter the attack.
-    	// When that happens, the player's character will lose some of their HP.
-    	// These points are shown at the bottom of the player character's picture.
-    	//store original count val in var increment
-    	console.log(game.player.health);
     })
 
     $('#play-again').on('click', function(event){
