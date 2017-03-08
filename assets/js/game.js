@@ -37,10 +37,9 @@ game.displayMenu = function(){
 	game.characters.forEach(function(character){
 		var newCharacter = new Character(character.sprite, character.name, random(100,100), random(10,5));
 		game.newCharacters.push(newCharacter)
-		player.charImage = HTMLspritefig.replace('%imgdata%', newCharacter.sprite).replace('%altdata%', newCharacter.name).replace('%playername%', newCharacter.name).replace('%playerhealth%', newCharacter.health).replace('%playerattack%', newCharacter.attack);
+		player.charImage = HTMLspritefig.replace('%imgdata%', newCharacter.sprite).replace('%altdata%', newCharacter.name).replace('%playername%', newCharacter.name).replace('%playerhealth%', newCharacter.health);
 		$('#characters').append(player.charImage);
 	})
-	console.log(game.newCharacters);
 }
 
 //TO-DO finish removing hardcoded from html
@@ -48,13 +47,12 @@ game.displayEnemies = function(){
 	$('#main').toggleClass( 'hidden' );
 	$('#game-stage').toggleClass('hidden');
 	$('#game-stage').prepend(`<h2 id='#instructions2'class='text-center'>${game.instructions2}<h2>`);
-	console.log(game.player);
-	player.charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite).replace('%altdata%', game.player.name).replace('%playername%', game.player.name).replace('%playerhealth%', game.player.health).replace('%playerattack%', game.player.attack);
+	player.charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite).replace('%altdata%', game.player.name).replace('%playername%', game.player.name).replace('%playerhealth%', game.player.health)
 	$('#player').append(player.charImage);
 	game.newCharacters.forEach(function(character){
 		var enemy = new Character(character.sprite, character.name, character.health, character.attack);
 		game.enemies.push(enemy);
-		var enemyImage = HTMLenemyspritefig.replace('%imgdata%', character.sprite).replace('%altdata%', character.name).replace('%playername%', character.name).replace('%playerhealth%', character.health).replace('%playerattack%', character.attack);
+		var enemyImage = HTMLenemyspritefig.replace('%imgdata%', character.sprite).replace('%altdata%', character.name).replace('%playername%', character.name).replace('%playerhealth%', character.health)
 		$('#enemy-choices').append(enemyImage);
 	})
 
@@ -66,15 +64,22 @@ game.displayBattle = function(){
 	$('#game-stage').toggleClass('hidden');
 	$('#fight-stage').toggleClass('hidden');
     $('#fight-button').toggleClass('hidden');
-	HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><figcaption id="enemy-caption"class="figure-caption">Name: %playername% Health: %playerhealth% Attack Potency: %playerattack%</figcaption></figure>'
-	game.enemy.charImage = HTMLenemyspritefig.replace('%imgdata%', game.enemy.sprite).replace('%altdata%', game.enemy.name).replace('%playername%', game.enemy.name).replace('%playerhealth%', game.enemy.health).replace('%playerattack%', game.enemy.attack);
-	$('#fight-stage').prepend(`<h2 id="instructions3" class='text-center'>${game.instructions3}<h2>`);
+	HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="enemy-caption"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
+	game.enemy.charImage = HTMLenemyspritefig.replace('%imgdata%', game.enemy.sprite).replace('%altdata%', game.enemy.name).replace('%playername%', game.enemy.name).replace('%playerhealth%', game.enemy.health);
 	$('#fight-player').append(player.charImage);
 	$('#fight-enemy').append(game.enemy.charImage);
 	var playerResult = `<h3 id="player-result">${game.player.health}</h3>`
-    // $('#character-caption').html(`Name:${game.player.name} Health:${game.player.health}`);
-    // $('#enemy-caption').html(`Name:${game.enemy.name} Health:${game.enemy.health}`);
 	// var enemyResult =  `<h3 id="defender-result">${this.enemy.health}</h3>`
+}
+
+game.displayBattleAgain = function(){
+    console.log(game.enemy);
+    $('.next-opponent-sprite').remove();
+    HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="enemy-caption"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
+    game.enemy.charImage = HTMLenemyspritefig.replace('%imgdata%', game.enemy.sprite).replace('%altdata%', game.enemy.name).replace('%playername%', game.enemy.name).replace('%playerhealth%', game.enemy.health);
+    $('#fight-enemy').append(game.enemy.charImage);
+    var playerResult = `<h3 id="player-result">${game.player.health}</h3>`
+    // var enemyResult =  `<h3 id="defender-result">${this.enemy.health}</h3>`
 }
 
 //TO-DO finish removing hardcoded from html
@@ -95,9 +100,11 @@ game.displayNext = function(){
     $('#fight-button').toggleClass('hidden');
     //repopulate DOM with remaining enemy choices
     game.enemies.forEach(function(character){
-        console.log(character)
-    	enemyImage = HTMLenemyspritefig.replace('%imgdata%', character.sprite).replace('%altdata%', character.name).replace('%playername%', character.name).replace('%playerhealth%', character.health).replace('%playerattack%', character.attack);
-    	console.log("appending" + enemyImage);
+        // addClass and removeClass only work on first instance in group
+        // $('.enemy-sprite').addClass('next-opponent-sprite');
+        // $('.enemy-sprite').removeClass('enemy-sprite');
+    	enemyImage = HTMLnextenemyspritefig.replace('%imgdata%', character.sprite).replace('%altdata%', character.name).replace('%playername%', character.name).replace('%playerhealth%', character.health);
+        console.log("appending" + enemyImage);
         $('#fight-enemy').append(enemyImage);
     })
 }
@@ -145,6 +152,7 @@ $(document).ready(function(){
     });
 
      $('#enemy-choices').on('click', '.enemy-sprite', function(event){
+        console.log('firing enemy-choices click')
      	var name = $(this).attr("alt");
         for (var i = 0; i < game.enemies.length; i++) {
            if (game.enemies[i].name == name)
@@ -153,21 +161,33 @@ $(document).ready(function(){
         game.displayBattle();
     });
 
-      $('#fight-enemy').on('click', 'img', function(event){
-        var name = $(this).attr("alt");
+      $('#fight-enemy').on('click', '.next-opponent-sprite', function(event){
+        console.log('firing fight-enemy click');
+        //assign clicked sprite to game.enemy
+        // console.log($(this) img);
+        // var name = $(this).children().attr('alt');
+        var name = $(this).parent().find('img');
+        console.log(name);
         for (var i = 0; i < game.enemies.length; i++) {
            if (game.enemies[i].name == name)
-                game.enemy = game.enemies[i];
-        }
 
-        game.displayBattle();
+                game.enemy = game.enemies[i];
+                console.log(`choosing:`, game.enemy)
+        }
+        console.log(`new enemy:`, game.enemy);
+        game.displayBattleAgain();
+
     });
 
 
     $('#fight-button').on('click', function(event){
 
-    	console.log(`player attack:${game.player.attack}, playercoutner:${game.player.counterAttack}`)
-
+        //created new div for caption info, BC I can't figure out how to select the <figcaption> by element or ID.
+        //TO-DO: select by id and remove hardcoded '#player-caption div'
+        $('#player-caption').html(`Name:${game.player.name} Health:${game.player.health}`);
+        //TO-DO: why doesn't this work at all?
+        $('#enemy-caption').html(`Name:${game.enemy.name} Health:${game.enemy.health}`);
+        $('#new-result').html(`You Attacked ${game.enemy.name} for ${game.player.attack} damage. S/he attacked you back for ${game.enemy.attack} damage.`);
     	game.player.health = game.player.health - game.enemy.attack;
     	game.enemy.health = game.enemy.health - game.player.attack;
     	game.player.attack = game.player.attack + game.player.counterAttack;
