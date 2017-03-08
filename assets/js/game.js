@@ -163,15 +163,15 @@ $(document).ready(function(){
 
       $('#fight-enemy').on('click', '.next-opponent-sprite', function(event){
         console.log('firing fight-enemy click');
-        //assign clicked sprite to game.enemy
-        // console.log($(this) img);
-        // var name = $(this).children().attr('alt');
-        var name = $(this).parent().find('img');
+        //works on first click
+        var name = $(this).attr('alt')
+        //on second click "$this" is figure object, so wrong info displays
         console.log(name);
         for (var i = 0; i < game.enemies.length; i++) {
            if (game.enemies[i].name == name)
 
                 game.enemy = game.enemies[i];
+                //because name is undefined on click, it chooses twice?
                 console.log(`choosing:`, game.enemy)
         }
         console.log(`new enemy:`, game.enemy);
