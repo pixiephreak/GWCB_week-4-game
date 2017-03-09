@@ -47,7 +47,7 @@ game.displayEnemies = function(){
 	$('#main').toggleClass( 'hidden' );
 	$('#game-stage').toggleClass('hidden');
 	$('#game-stage').prepend(`<h2 id='#instructions2'class='text-center'>${game.instructions2}<h2>`);
-	player.charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite).replace('%altdata%', game.player.name).replace('%playername%', game.player.name).replace('%playerhealth%', game.player.health)
+    player.charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite).replace('%altdata%', game.player.name).replace('%playername%', game.player.name).replace('%playerhealth%', game.player.health)
 	$('#player').append(player.charImage);
 	game.newCharacters.forEach(function(character){
 		var enemy = new Character(character.sprite, character.name, character.health, character.attack);
@@ -64,7 +64,10 @@ game.displayBattle = function(){
 	$('#game-stage').toggleClass('hidden');
 	$('#fight-stage').toggleClass('hidden');
     $('#fight-button').toggleClass('hidden');
-	HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="enemy-caption"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
+    $('#new-result').toggleClass('hidden');
+    HTMLspritefig = '<figure class="figure" > <img src="%imgdata%" class="figure-img img-fluid rounded character-sprite" alt="%altdata%"><div id="unique-player-caption" class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>';
+	player.charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite).replace('%altdata%', game.player.name).replace('%playername%', game.player.name).replace('%playerhealth%', game.player.health);
+    HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="unique-enemy-id"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
 	game.enemy.charImage = HTMLenemyspritefig.replace('%imgdata%', game.enemy.sprite).replace('%altdata%', game.enemy.name).replace('%playername%', game.enemy.name).replace('%playerhealth%', game.enemy.health);
 	$('#fight-player').append(player.charImage);
 	$('#fight-enemy').append(game.enemy.charImage);
@@ -73,9 +76,9 @@ game.displayBattle = function(){
 }
 
 game.displayBattleAgain = function(){
-    console.log(game.enemy);
+    console.log("battling again", game.enemy);
     $('.next-opponent-sprite').remove();
-    HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="enemy-caption"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
+    HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="enemy-caption-2"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
     game.enemy.charImage = HTMLenemyspritefig.replace('%imgdata%', game.enemy.sprite).replace('%altdata%', game.enemy.name).replace('%playername%', game.enemy.name).replace('%playerhealth%', game.enemy.health);
     $('#fight-enemy').append(game.enemy.charImage);
     var playerResult = `<h3 id="player-result">${game.player.health}</h3>`
@@ -163,16 +166,16 @@ $(document).ready(function(){
 
       $('#fight-enemy').on('click', '.next-opponent-sprite', function(event){
         console.log('firing fight-enemy click');
-        //works on first click
+        console.log("this is",$(this),this);
         var name = $(this).attr('alt')
         //on second click "$this" is figure object, so wrong info displays
         console.log(name);
         for (var i = 0; i < game.enemies.length; i++) {
-           if (game.enemies[i].name == name)
-
-                game.enemy = game.enemies[i];
-                //because name is undefined on click, it chooses twice?
-                console.log(`choosing:`, game.enemy)
+           if (game.enemies[i].name == name){
+            game.enemy = game.enemies[i];
+            //because name is undefined on click, it chooses twice?
+            console.log(`choosing:`, game.enemy)
+            }
         }
         console.log(`new enemy:`, game.enemy);
         game.displayBattleAgain();
@@ -182,15 +185,19 @@ $(document).ready(function(){
 
     $('#fight-button').on('click', function(event){
 
-        //created new div for caption info, BC I can't figure out how to select the <figcaption> by element or ID.
-        //TO-DO: select by id and remove hardcoded '#player-caption div'
-        $('#player-caption').html(`Name:${game.player.name} Health:${game.player.health}`);
-        //TO-DO: why doesn't this work at all?
-        $('#enemy-caption').html(`Name:${game.enemy.name} Health:${game.enemy.health}`);
-        $('#new-result').html(`You Attacked ${game.enemy.name} for ${game.player.attack} damage. S/he attacked you back for ${game.enemy.attack} damage.`);
+        var test = $('#unique-enemy-id');
+        console.log(test);
     	game.player.health = game.player.health - game.enemy.attack;
     	game.enemy.health = game.enemy.health - game.player.attack;
     	game.player.attack = game.player.attack + game.player.counterAttack;
+        console.log(`before:${game.player.health} now enemy${game.enemy.health}`)
+        //created new div for caption info, BC I can't figure out how to select the <figcaption> by element or ID.
+        //TO-DO: select by id and remove hardcoded '#player-caption div'
+        $('#unique-player-caption').html(`Name:${game.player.name} Health:${game.player.health}`);
+
+        //TO-DO: why doesn't this work at all?
+        $('#unique-enemy-id').html(`Name:${game.enemy.name} Health:${game.enemy.health}`);
+        $('#new-result').html(`You Attacked ${game.enemy.name} for ${game.player.attack} damage. S/he attacked you back for ${game.enemy.attack} damage.`);
     	console.log(`now player:${game.player.health} now enemy${game.enemy.health}`)
     	if(game.player.health <= 0){
     		game.result = "You lose";
