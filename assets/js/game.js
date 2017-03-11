@@ -64,7 +64,7 @@ game.displayBattle = function(){
 	$('#game-stage').toggleClass('hidden');
 	$('#fight-stage').toggleClass('hidden');
     $('#fight-button').toggleClass('hidden');
-    $('#new-result').toggleClass('hidden');
+
     HTMLspritefig = '<figure class="figure" > <img src="%imgdata%" class="figure-img img-fluid rounded character-sprite" alt="%altdata%"><div id="unique-player-caption" class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>';
 	player.charImage = HTMLspritefig.replace('%imgdata%', game.player.sprite).replace('%altdata%', game.player.name).replace('%playername%', game.player.name).replace('%playerhealth%', game.player.health);
     HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="unique-enemy-id"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
@@ -77,7 +77,13 @@ game.displayBattle = function(){
 
 game.displayBattleAgain = function(){
     console.log("battling again", game.enemy);
+    $('#fight-enemy').empty();
     $('.next-opponent-sprite').remove();
+    $('#fight-button').toggleClass('hidden');
+    $('#instructions4').toggleClass('hidden');
+    $('#new-result').empty();
+    $('#new-result').toggleClass('hidden');
+    console.log('where is my stuff');
     HTMLenemyspritefig = '<figure class="figure"> <img src="%imgdata%" class="figure-img img-fluid rounded enemy-sprite" alt="%altdata%"><div id="enemy-caption-2"class="figure-caption">Name: %playername% Health: %playerhealth% </div></figure>'
     game.enemy.charImage = HTMLenemyspritefig.replace('%imgdata%', game.enemy.sprite).replace('%altdata%', game.enemy.name).replace('%playername%', game.enemy.name).replace('%playerhealth%', game.enemy.health);
     $('#fight-enemy').append(game.enemy.charImage);
@@ -91,6 +97,9 @@ game.displayBattleAgain = function(){
 game.displayNext = function(){
     $('#fight-stage').prepend(`<h2 id='instructions4' class='text-center'>${game.instructions4}<h2>`);
     $('#instructions3').remove();
+    $('#new-result').toggleClass('hidden');
+    $('#fight-enemy').empty();
+    $('#fight-button').toggleClass('hidden');
 	//remove current enemy from model
 	for (var i = 0; i < game.enemies.length; i++) {
            		if (game.enemies[i].name == name)
@@ -99,8 +108,7 @@ game.displayNext = function(){
     game.enemies.splice(index,1);
     console.log(game.enemies);
     // TO-DO: remove current enemy from DOM
-    $('#fight-enemy').empty();
-    $('#fight-button').toggleClass('hidden');
+
     //repopulate DOM with remaining enemy choices
     game.enemies.forEach(function(character){
         // addClass and removeClass only work on first instance in group
@@ -154,7 +162,7 @@ $(document).ready(function(){
 
     });
 
-     $('#enemy-choices').on('click', '.enemy-sprite', function(event){
+     $(document).on('click', '.enemy-sprite', function(event){
         console.log('firing enemy-choices click')
      	var name = $(this).attr("alt");
         for (var i = 0; i < game.enemies.length; i++) {
@@ -164,7 +172,7 @@ $(document).ready(function(){
         game.displayBattle();
     });
 
-      $('#fight-enemy').on('click', '.next-opponent-sprite', function(event){
+      $(document).on('click', '.next-opponent-sprite', function(event){
         console.log('firing fight-enemy click');
         console.log("this is",$(this),this);
         var name = $(this).attr('alt')
